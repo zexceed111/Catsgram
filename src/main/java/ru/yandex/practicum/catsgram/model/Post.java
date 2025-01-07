@@ -15,10 +15,4 @@ public class Post {
     private String description;
     private Instant postDate;
 
-    public Post(Long id, long authorId, String description, Instant postDate) {
-        this.id = id;
-        this.authorId = authorId;
-        this.description = description;
-        this.postDate = postDate;
-    }
 }
