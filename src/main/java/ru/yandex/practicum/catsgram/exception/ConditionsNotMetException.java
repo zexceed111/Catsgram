@@ -1,11 +1,11 @@
 package ru.yandex.practicum.catsgram.exception;
 
 public class ConditionsNotMetException extends RuntimeException {
-    public ConditionsNotMetException (String massage){
-        super(massage);
+    public ConditionsNotMetException(String message) {
+        super(message);
     }
 
-    public ConditionsNotMetException(String massage, Throwable cause){
+public ConditionsNotMetException(String massage, Throwable cause){
         super(massage, cause);
     }
 }
