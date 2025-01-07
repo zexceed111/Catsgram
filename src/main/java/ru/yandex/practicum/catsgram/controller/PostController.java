@@ -31,12 +31,8 @@ public class PostController {
         return post;
     }
 
-    private long getNextId(){
-        long currentMaxId = posts.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
+    private long getNextId() {
+        long currentMaxId = posts.keySet().stream().mapToLong(id -> id).max().orElse(0);
         return ++currentMaxId;
     }
 

@@ -5,7 +5,7 @@ public class ConditionsNotMetException extends RuntimeException {
         super(message);
     }
 
-public ConditionsNotMetException(String massage, Throwable cause){
+    public ConditionsNotMetException(String massage, Throwable cause) {
         super(massage, cause);
     }
 }
