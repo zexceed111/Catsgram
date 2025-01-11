@@ -55,11 +55,11 @@ public class UserController {
                 }
             }
         }
-         existingUser.setEmail(updatedUser.getEmail());
-        if (updatedUser.getUsername() != null){
+        existingUser.setEmail(updatedUser.getEmail());
+        if (updatedUser.getUsername() != null) {
             existingUser.setUsername(updatedUser.getUsername());
         }
-        if (updatedUser.getPassword() != null){
+        if (updatedUser.getPassword() != null) {
             existingUser.setPassword(updatedUser.getPassword());
         }
         return new ResponseEntity<>(existingUser, HttpStatus.OK);
