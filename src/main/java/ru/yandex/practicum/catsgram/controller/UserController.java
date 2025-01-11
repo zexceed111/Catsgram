@@ -8,6 +8,7 @@ import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.DuplicatedDataException;
 import ru.yandex.practicum.catsgram.model.*;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,17 +18,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private Map<Long, User> users = new HashMap<>();
-    private Long idCounter = 1L;
+    private final Map<Long, User> users = new HashMap<>();
 
     @GetMapping
     public ResponseEntity<List<User>> getUsers() {
         List<User> userList = users.values().stream().collect(Collectors.toList());
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
+    private long getNextId() {
+        long currentMaxId = users.keySet().stream().mapToLong(id -> id).max().orElse(0);
+        return ++currentMaxId;
+    }
 
     @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new ConditionsNotMetException("Имейл должен быть указан");
         }
@@ -36,9 +40,10 @@ public class UserController {
                 throw new DuplicatedDataException("Этот имейл уже используется");
             }
         }
-        user.setId((idCounter++));
+        user.setId(getNextId());
+        user.setRegistrationDate(Instant.now());
         users.put(user.getId(), user);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        return user;
     }
 
     @PutMapping
