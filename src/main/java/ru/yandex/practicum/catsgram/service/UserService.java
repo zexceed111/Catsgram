@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +19,10 @@ public class UserService {
     public List<User> getUsers() {
         List<User> userList = users.values().stream().collect(Collectors.toList());
         return userList;
+    }
+
+    public Optional<User> findUserById(Long id) {
+        return Optional.ofNullable(users.get(id));
     }
 
     public User addUser(User user) {
@@ -53,6 +58,13 @@ public class UserService {
             existingUser.setPassword(updatedUser.getPassword());
         }
         return updatedUser;
+    }
+
+    public User findUserByEmail(String email) {
+        if (email == null) {
+            return null;
+        }
+        return users.get(email);
     }
 
     private long getNextId() {
