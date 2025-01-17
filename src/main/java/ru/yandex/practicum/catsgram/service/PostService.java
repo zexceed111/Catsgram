@@ -2,18 +2,14 @@ package ru.yandex.practicum.catsgram.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
-import ru.yandex.practicum.catsgram.model.User;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -25,9 +21,22 @@ public class PostService {
         this.userService = userService;
     }
 
-
-    public Collection<Post> findAll() {
-        return posts.values();
+    public Collection<Post> findAll(int from, int size, String sort) {
+        // Получение списка постов и сортировка
+        List<Post> sortedPosts = posts.values()
+                .stream()
+                .sorted((p1, p2) -> {
+                    if(SortOrder.from(sort) == SortOrder.ASCENDING){
+                        return p1.getPostDate().compareTo(p2.getPostDate());
+                    }else{
+                        return p2.getPostDate().compareTo(p1.getPostDate());
+                    }
+                })
+                .collect(Collectors.toList());
+        return sortedPosts.stream()
+                .skip(from)
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
     public Post create(Post post) {
