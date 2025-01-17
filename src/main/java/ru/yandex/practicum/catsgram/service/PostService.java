@@ -9,7 +9,7 @@ import ru.yandex.practicum.catsgram.model.Post;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 public class PostService {
@@ -21,22 +21,25 @@ public class PostService {
         this.userService = userService;
     }
 
-    public Collection<Post> findAll(int from, int size, String sort) {
-        // Получение списка постов и сортировка
-        List<Post> sortedPosts = posts.values()
-                .stream()
-                .sorted((p1, p2) -> {
-                    if(SortOrder.from(sort) == SortOrder.ASCENDING){
-                        return p1.getPostDate().compareTo(p2.getPostDate());
-                    }else{
-                        return p2.getPostDate().compareTo(p1.getPostDate());
-                    }
-                })
-                .collect(Collectors.toList());
-        return sortedPosts.stream()
-                .skip(from)
-                .limit(size)
-                .collect(Collectors.toList());
+    public Collection<Post> findAll(Long from, Long size, String sort) {
+        if (sort.equals("asc")) {
+            return posts.keySet()
+                    .stream()
+                    .map(posts::get)
+                    .filter(k -> k.getId() > from)
+                    .sorted(Comparator.comparing(Post::getPostDate))
+                    .limit(size)
+                    .toList();
+        } else if (sort.equals("desc")) {
+            return posts.keySet()
+                    .stream()
+                    .map(posts::get)
+                    .sorted(Comparator.comparing(Post::getPostDate).reversed())
+                    .limit(size)
+                    .toList();
+        } else {
+            return null;
+        }
     }
 
     public Post create(Post post) {
@@ -56,11 +59,8 @@ public class PostService {
         return post;
     }
 
-    public Post findPostById(Long postId) {
-        return posts.values()
-                .stream()
-                .filter(post -> post.getId().equals(postId))
-                .findFirst()
+    public Post findById(Long postId) {
+        return Optional.ofNullable(posts.get(postId))
                 .orElseThrow(() -> new NotFoundException(String.format("Пост № %d не найден", postId)));
     }
 

@@ -67,6 +67,10 @@ public class UserService {
         return users.get(email);
     }
 
+    public User findById(Long id) {
+        return users.get(id);
+    }
+
     private long getNextId() {
         long currentMaxId = users.keySet()
                 .stream()
