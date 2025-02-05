@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.NotFoundException;
+import ru.yandex.practicum.catsgram.exception.ParameterNotValidException;
 import ru.yandex.practicum.catsgram.model.Post;
 
 import java.time.Instant;
@@ -22,6 +23,18 @@ public class PostService {
     }
 
     public Collection<Post> findAll(Long from, Long size, String sort) {
+        // Проверяем параметры
+        if (from < 0) {
+            throw new ParameterNotValidException("from", "Начальный индекс не может быть меньше нуля.");
+        }
+        if (size <= 0) {
+            throw new ParameterNotValidException("size", "Некорректный размер выборки. Размер должен быть больше нуля.");
+        }
+        if (!sort.equals("asc") && !sort.equals("desc")) {
+            throw new ParameterNotValidException("sort", "Некорректное значение сортировки. Допустимые значения: asc, desc.");
+        }
+
+        // Обрабатываем сортировку
         if (sort.equals("asc")) {
             return posts.keySet()
                     .stream()
@@ -30,17 +43,16 @@ public class PostService {
                     .sorted(Comparator.comparing(Post::getPostDate))
                     .limit(size)
                     .toList();
-        } else if (sort.equals("desc")) {
+        } else {
             return posts.keySet()
                     .stream()
                     .map(posts::get)
                     .sorted(Comparator.comparing(Post::getPostDate).reversed())
                     .limit(size)
                     .toList();
-        } else {
-            return null;
         }
     }
+
 
     public Post create(Post post) {
         if (post.getDescription() == null || post.getDescription().isBlank()) {
