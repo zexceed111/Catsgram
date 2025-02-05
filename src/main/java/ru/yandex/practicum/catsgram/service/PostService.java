@@ -61,7 +61,7 @@ public class PostService {
 
     public Post findById(Long postId) {
         return Optional.ofNullable(posts.get(postId))
-                .orElseThrow(() -> new NotFoundException(String.format("Пост № %d не найден", postId)));
+                .orElseThrow(() -> new ConditionsNotMetException(String.format("Пост № %d не найден", postId)));
     }
 
     public Post update (Post newPost){
