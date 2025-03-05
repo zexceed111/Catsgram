@@ -1,3 +1,4 @@
 # Catsgram
 
-![Image](https://github.com/user-attachments/assets/0b9e86af-6e67-467e-b027-09e200c6b8d6)
+
+<img width="1440" alt="S04_47-3_1715785331" src="https://github.com/user-attachments/assets/9ab5dd3a-fa5b-4e3d-aae1-19459a4cba84" />
